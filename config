@@ -1,0 +1,19 @@
+Host github.com-image-detection-development
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/snapncook_development_key
+
+Host github.com-image-detection-model
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/snapncook_model_key
+
+Host github.com-image-detection-backend
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/snapncook_backend_key
+
+Host github.com-image-detection-frontend
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/snapncook_frontend_key

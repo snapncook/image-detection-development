@@ -30,7 +30,7 @@ services:
     container_name: snapncook_model
     restart: always
     ports:
-      - "50051:50051"
+      - "50055:50055"
     networks:
       - snapncook_network
 
