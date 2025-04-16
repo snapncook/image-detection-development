@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    container_name: snapncook_db
+    hostname: db
+    ports:
+      - "5353:5353"
+    env_file:
+      - ${DB_ENV_PATH}
+    volumes:
+      - ${DB_VOLUME}
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - snapncook_network
+  
+  model:
+    build: ${MODEL_PATH}
+    container_name: snapncook_model
+    restart: always
+    ports:
+      - "50051:50051"
+    networks:
+      - snapncook_network
+
+  frontend:
+    build: ${FRONTEND_PATH}
+    container_name: snapncook_frontend
+    depends_on:
+      - backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+     - PORT=3000          
+     - HOSTNAME=0.0.0.0 
+     - API_URL=http://backend:8080/api 
+    networks:
+      - snapncook_network
+
+  backend:
+    build: ${BACKEND_PATH}
+    container_name: snapncook_backend
+    depends_on:
+      - db
+      - model
+    restart: always
+    ports:
+      - "8989:8989"
+    env_file:
+      - ${BACKEND_ENV_PATH}
+    networks:
+      - snapncook_network
+
+volumes:
+  db_data:
+
+networks:
+  snapncook_network:
+    name: snapncook_network
+    driver: bridge 
